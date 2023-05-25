@@ -1,0 +1,38 @@
+[
+  {
+    "value": "Full Name",
+    "label": "Full Name"
+  },
+  {
+    "value": "First Name",
+    "label": "First Name"
+  },
+  {
+    "value": "Last Name",
+    "label": "Last Name"
+  },
+  {
+    "value": "Address",
+    "label": "Address"
+  },
+  {
+    "value": "Zip Code",
+    "label": "Zip Code"
+  },
+  {
+    "value": "State",
+    "label": "State"
+  },
+  {
+    "value": "phone",
+    "label": "Phone Number"
+  },
+  {
+    "value": "email",
+    "label": "Email"
+  },
+  {
+    "value": "Time",
+    "label": "Time"
+  }
+]
