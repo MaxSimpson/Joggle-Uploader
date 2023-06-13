@@ -3,6 +3,26 @@ import "./App.css";
 import data from "./mock-data.json";
 import optionsData from "./options.json";
 
+
+function csvToJson(csv) {
+  const lines = csv.trim().split('\n');
+  const headers = lines.shift().split(',');
+  const json = [];
+
+  lines.forEach((line) => {
+    const values = line.split(',');
+    const entry = {};
+
+    headers.forEach((header, index) => {
+      entry[header] = values[index];
+    });
+
+    json.push(entry);
+  });
+
+  return json;
+}
+
 const App = () => {
   // Load the options from the JSON file
   const [options] = useState(optionsData);
@@ -40,9 +60,9 @@ const App = () => {
                       key={option.value}
                       value={option.value}
                       disabled={
-                        Object.values(selectedOptions).includes(option.value) &&
+                        option.value !== "Ignore" && Object.values(selectedOptions).includes(option.value) &&
                         selectedOptions[key] !== option.value
-                      }
+                      } 
                     >
                       {option.label}
                     </option>

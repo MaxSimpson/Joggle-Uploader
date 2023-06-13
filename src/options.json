@@ -1,5 +1,9 @@
 [
   {
+    "value": "Ignore",
+    "label": "Ignore"
+  },
+  {
     "value": "Full Name",
     "label": "Full Name"
   },
