@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import "./App.css";
-import data from "./mock-data.json";
 import optionsData from "./options.json";
 import Papa from 'papaparse';
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const UploadScreen = ({ onUpload }) => {
   const [includeHeader, setIncludeHeader] = useState(true);
@@ -19,9 +25,6 @@ const UploadScreen = ({ onUpload }) => {
   };
 
   const parseCSVData = csvData => {
-    // Parse the CSV data and return the parsed array
-    // You can use a third-party library like csv-parser or papaparse for parsing CSV data
-    // Here's an example using papaparse library
     const parsedData = Papa.parse(csvData, { header: includeHeader }).data;
     return parsedData;
   };
@@ -32,51 +35,28 @@ const UploadScreen = ({ onUpload }) => {
 
   return (
     <div>
-      <h1>Upload CSV</h1>
+      <h1>CSV Uploader</h1>
         <label>
           Has Headers:
           <input type="checkbox" checked={includeHeader} onChange={handleCheckboxChange} />
         </label>
         <br/>
+      
       <input type="file" accept=".csv" onChange={handleFileUpload} />
     </div>
   );
 };
 
 
-function csvToJson(csv) {
-  const lines = csv.trim().split('\n');
-  const headers = lines.shift().split(',');
-  const json = [];
-
-  lines.forEach((line) => {
-    const values = line.split(',');
-    const entry = {};
-
-    headers.forEach((header, index) => {
-      entry[header] = values[index];
-    });
-
-    json.push(entry);
-  });
-
-  return json;
-}
-
 const App = () => {
   const [dataArray, setDataArray] = useState([]);
 
   const handleUpload = data => {
     setDataArray(data);
-    console.log("STORED DATA")
-    console.log(data)
   };
 
   // Load the options from the JSON file
   const [options] = useState(optionsData);
-
-  // Load contacts from json, parse instead but not here...
-  const [contacts] = useState(data);
 
   // Store the selected options for each column
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -91,49 +71,56 @@ const App = () => {
   };
 
   // HTML Return
-  return (
-    <div className="app-container">
-      <UploadScreen onUpload={handleUpload} />
-
-      {/* <table>
-        <thead>
-          <tr>
-            {Object.keys(contacts[0]).map(key => (
-              <th key={key}>
-                <select
-                  value={selectedOptions[key] || ""}
-                  onChange={event => handleSelectChange(event, key)}
-                >
-                  <option value="">-- Select Option --</option>
-                  {options.map(option => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                      disabled={
-                        option.value !== "Ignore" && Object.values(selectedOptions).includes(option.value) &&
-                        selectedOptions[key] !== option.value
-                      } 
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {contacts.map(contact => (
-            <tr key={contact.id}>
-              {Object.values(contact).map(value => (
-                <td key={value}>{value}</td>
+  // If no CSV then ask for csv upload
+  if (dataArray.length === 0) {
+    return <div className="app-container">
+              <UploadScreen onUpload={handleUpload} />
+            </div>
+  } else { // Data has been uploaded so display in table format
+    return (
+      <div className="app-container">
+        <Table>
+          <TableHead>
+            <TableRow>
+              {dataArray.length > 0 &&
+              dataArray[0].map((value, columnIndex) => (
+                <TableCell key={columnIndex}>
+                  <Select
+                    value={selectedOptions[columnIndex] || ''}
+                    onChange={event => handleSelectChange(event, columnIndex)}
+                  >
+                    <MenuItem value="">-- Select Option --</MenuItem>
+                    {options.map(option => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={
+                          option.value !== 'Ignore' &&
+                          Object.values(selectedOptions).includes(option.value) &&
+                          selectedOptions[columnIndex] !== option.value
+                        }
+                      >
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </TableCell>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-    </div>
-  );
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dataArray.map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {row.map((value, columnIndex) => (
+                  <TableCell key={columnIndex}>{value}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  } 
 };
 
 export default App;
