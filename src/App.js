@@ -1,51 +1,12 @@
 import React, { useState } from "react";
 import optionsData from "./options.json";
-import Papa from 'papaparse';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Select from '@mui/material/Select';
+import { Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
-const UploadScreen = ({ onUpload }) => {
-  const [includeHeader, setIncludeHeader] = useState(true);
-
-  const handleFileUpload = event => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      const csvData = reader.result;
-      const dataArray = parseCSVData(csvData);
-      onUpload(dataArray);
-    };
-    reader.readAsText(file);
-  };
-
-  const parseCSVData = csvData => {
-    const parsedData = Papa.parse(csvData, { header: includeHeader }).data;
-    return parsedData;
-  };
-
-  const handleCheckboxChange = event => {
-    setIncludeHeader(event.target.checked);
-  };
-
-  return (
-    <div>
-      <h1>CSV Uploader</h1>
-        <label>
-          Has Headers:
-          <input type="checkbox" checked={includeHeader} onChange={handleCheckboxChange} />
-        </label>
-        <br/>
-      
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
-    </div>
-  );
-};
+import UploadScreen from './UploadScreen';
+import './App.css';
 
 
 const App = () => {
