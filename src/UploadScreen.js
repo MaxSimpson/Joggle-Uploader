@@ -11,13 +11,16 @@ const UploadScreen = ({ onUpload }) => {
     reader.onload = () => {
       const csvData = reader.result;
       const dataArray = parseCSVData(csvData);
+      if(includeHeader) {
+        dataArray.shift()
+      }
       onUpload(dataArray);
     };
     reader.readAsText(file);
   };
 
   const parseCSVData = csvData => {
-    const parsedData = Papa.parse(csvData, { header: includeHeader }).data;
+    const parsedData = Papa.parse(csvData).data;
     return parsedData;
   };
 

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import optionsData from "./options.json";
 
-import { Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow, Grid } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
 import UploadScreen from './UploadScreen';
 import './App.css';
+import debug from "debug";
 
 
 const App = () => {
@@ -31,6 +32,9 @@ const App = () => {
     }));
   };
 
+  // Continue button check
+  const isButtonDisabled = Object.values(selectedOptions).length == dataArray.length && !Object.values(selectedOptions).includes("")
+
   // HTML Return
   // If no CSV then ask for csv upload
   if (dataArray.length === 0) {
@@ -40,6 +44,9 @@ const App = () => {
   } else { // Data has been uploaded so display in table format
     return (
       <div className="app-container">
+       <Grid container justifyContent="center">
+        <Button variant="contained" disabled={!isButtonDisabled}>Continue</Button>
+      </Grid>
         <Table>
           <TableHead>
             <TableRow>
